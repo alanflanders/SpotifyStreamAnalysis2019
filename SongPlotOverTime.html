@@ -40,41 +40,41 @@ text.legendtitle {
 <body onload='init()'>
 <table>
     <tr><td>
-    <svg width=600 height=600 id="CountryPlot"></svg>
+    <svg width=600 height=600 id="SongStreamPlot"></svg>
     </td><td>
-    <svg width=150 height=200 id="GroupLegend"></svg>
+    <svg width=150 height=200 id="CountryLegend"></svg>
     </td></tr>
 </table>
 <script>
 
 async function init() {
     const groups = ["US of A","Global Average","Freshers","Laggards","Love you long time","Main Group"];
-    initCountryPlot(groups);
-    initGroupLegend(groups, 15);
+    initSongStreamPlot(groups);
+    initCountryLegend(groups, 15);
 }
 
-async function initCountryPlot(groups) {
-    const data = await d3.csv('https://alanflanders.github.io/SpotifyStreamAnalysis2019/CountryTopAggregateData.csv');
+async function initSongStreamPlot(groups) {
+    const data = await d3.csv('https://alanflanders.github.io/SpotifyStreamAnalysis2019/Top100SongData.csv');
 
     var margin = {top: 20, right: 50, bottom: 50, left: 50};
-    svg = d3.select("svg#CountryPlot");
+    svg = d3.select("svg#SongStreamPlot");
     svgWidth = parseInt(svg.style("width"));
     svgHeight = parseInt(svg.style("height"));
 
     var width = svgWidth - margin.left - margin.right;
     var height = svgHeight - margin.top - margin.bottom;
 
-    var x = d3.scaleLinear()
-    .domain([-1,40])
+    var x = d3.scaleTime()
+    .domain(new Date(2017, 1, 1), Date(2019,6,30))
     .range([0,width]);
 
-    var y = d3.scaleLinear()
-    .domain([10,110])
+    var y = d3.scaleLog()
+    .domain([10000,10000000])
     .range([height,0]);
 
-    var r = d3.scaleLinear()
-    .domain([0,135])
-    .range([2,(17/1000)*width]);
+    filterData = data.filter(function(d){return d.ArtistTrack == "Ed Sheeran - Shape of You"});
+
+    debugger;
 
     var groupColor = d3.scaleOrdinal(d3.schemeCategory10)
       .domain(groups);
