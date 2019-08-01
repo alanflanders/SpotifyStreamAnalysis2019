@@ -1,0 +1,194 @@
+<!DOCTYPE HTML>
+<!--
+	Alan Flanders
+	2019-08-01
+	CS 498 University of Illinois Urbana-Champaign
+	World Spotify streams from Jan-1-2017 to June-30-2019
+
+	Template credits:
+	Stellar by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>World Spotify Streams - 2017 to 2019</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+	</head>
+	<body class="is-preload">
+
+		<!-- Wrapper -->
+			<div id="wrapper">
+
+				<!-- Header -->
+					<header id="header" class="alt">
+						<span class="logo"><img src="images/logo.svg" alt="" /></span>
+						<h1>World Spotify Streams</h1>
+						<p>World Spotify streaming data from Jan 2017 to Jun 2019<br/>
+						built by <a href="https://www.linkedin.com/in/alan-flanders/">Alan Flanders</a> for <a href="https://www.online.uillinois.edu/catalog/CourseDetail.asp?CourseID=21560">CS 498</a>.</p>
+					</header>
+
+				<!-- Nav -->
+					<nav id="nav">
+						<ul>
+							<li><a href="#intro" class="active">Introduction</a></li>
+							<li><a href="#first">Top 10 Analysis</a></li>
+							<li><a href="#second">Song Trends</a></li>
+							<li><a href="#third">Country Trends</a></li>
+						</ul>
+					</nav>
+
+				<!-- Main -->
+					<div id="main">
+						<!-- Introduction -->
+						<section id="intro" class="main">
+							<div class="spotlight">
+								<div class="content">
+									<header class="major">
+										<h2>Introduction</h2>
+									</header>
+									<p>Introduction text</p>
+									<ul class="actions">
+										<li><a href="#first" class="button">Next</a></li>
+									</ul>
+								</div>
+								<span class="image"><img src="images/pic01.jpg"/></span>
+							</div>
+						</section>
+
+						<!-- Top 10 Analysis -->
+						<section id="first" class="main special">
+								<header class="major">
+									<h2>Top 10 Analysis</h2>
+									<p>How quickly does a country adopt and keep a song in its top 10?</p>
+								</header>
+								<ul class="statistics">
+									<li class="style1">
+										<span class="icon solid fa-laptop"></span>
+										<strong>96</strong> Tracks in Global Top 10
+									</li>
+									<li class="style2">
+										<span class="icon fa-gem"></span>
+										<strong>53</strong> Average days in top 10
+									</li>
+									<li class="style3">
+										<span class="icon solid fa-signal"></span>
+										<strong>14</strong> Average days to reach top 10
+									</li>
+								</ul>
+								The list can be broken four groups
+								realative to the USA and Global average:
+							</p>
+							<ul style="list-style: none;">
+								<li><b>Freshers</b> - Countries who adopt a song quickly and move on</li>
+								<li><b>Laggards</b> - Countries who are slow to adopt a song</li>
+								<li><b>Love you long time</b> - Countries who love a song for a long time</li>
+								<li><b>Main group</b> - countries who more or less follow the global trend</li>
+								<li><b>US of A</b> - The USA could also be clustered with the fresher group</li>
+							</ul>
+
+							<p>The size of the circle indicates the number of songs which made it to the country's top 10.
+								Hover over a circle to see detailed data or select a country group to highlight those countries.
+							</p>
+
+								<iframe src="CountryScatterplot.html" height="750px" width="100%"></iframe>
+								<!--
+								<p class="content">Nam elementum nisl et mi a commodo porttitor. Morbi sit amet nisl eu arcu faucibus hendrerit vel a risus. Nam a orci mi, elementum ac arcu sit amet, fermentum pellentesque et purus. Integer maximus varius lorem, sed convallis diam accumsan sed. Etiam porttitor placerat sapien, sed eleifend a enim pulvinar faucibus semper quis ut arcu. Ut non nisl a mollis est efficitur vestibulum. Integer eget purus nec nulla mattis et accumsan ut magna libero. Morbi auctor iaculis porttitor. Sed ut magna ac risus et hendrerit scelerisque. Praesent eleifend lacus in lectus aliquam porta. Cras eu ornare dui curabitur lacinia.</p>
+								-->
+								<footer class="major">
+									<ul class="actions special">
+										<li><a href="#second" class="button">Next</a></li>
+									</ul>
+								</footer>
+							</section>
+
+						<!-- Song Analysis -->
+							<section id="second" class="main special">
+								<header class="major">
+									<h2>Song Analysis</h2>
+									<p>Select songs from the top 100 by stream to see how popularity changes over time by both the number
+										of streams and song ranking. Notice that more streams may still come from countries where the song
+										did not make it into the top 10.
+									</p>
+									<iframe src="SongPlotOverTime.html" height="850px" width="100%"></iframe>
+								</header>
+								
+								<footer class="major">
+										<ul class="actions special">
+											<li><a href="#third" class="button">Next</a></li>
+										</ul>
+								</footer>
+								</section>
+								
+						<!-- Free format -->
+							<section id="third" class="main special">
+								<header class="major">
+									<h2>Magna veroeros</h2>
+								</header>
+								<ul class="features">
+									<li>
+										<span class="icon solid major style1 fa-code"></span>
+										<h3>Ipsum consequat</h3>
+										<p>Sed lorem amet ipsum dolor et amet nullam consequat a feugiat consequat tempus veroeros sed consequat.</p>
+									</li>
+									<li>
+										<span class="icon major style3 fa-copy"></span>
+										<h3>Amed sed feugiat</h3>
+										<p>Sed lorem amet ipsum dolor et amet nullam consequat a feugiat consequat tempus veroeros sed consequat.</p>
+									</li>
+									<li>
+										<span class="icon major style5 fa-gem"></span>
+										<h3>Dolor nullam</h3>
+										<p>Sed lorem amet ipsum dolor et amet nullam consequat a feugiat consequat tempus veroeros sed consequat.</p>
+									</li>
+								</ul>
+							</section>
+
+					</div>
+
+				<!-- Footer -->
+					<footer id="footer">
+						<section>
+							<h2>Aliquam sed mauris</h2>
+							<p>Sed lorem ipsum dolor sit amet et nullam consequat feugiat consequat magna adipiscing tempus etiam dolore veroeros. eget dapibus mauris. Cras aliquet, nisl ut viverra sollicitudin, ligula erat egestas velit, vitae tincidunt odio.</p>
+							<ul class="actions">
+								<li><a href="generic.html" class="button">Learn More</a></li>
+							</ul>
+						</section>
+						<section>
+							<h2>Etiam feugiat</h2>
+							<dl class="alt">
+								<dt>Address</dt>
+								<dd>1234 Somewhere Road &bull; Nashville, TN 00000 &bull; USA</dd>
+								<dt>Phone</dt>
+								<dd>(000) 000-0000 x 0000</dd>
+								<dt>Email</dt>
+								<dd><a href="#">information@untitled.tld</a></dd>
+							</dl>
+							<ul class="icons">
+								<li><a href="#" class="icon brands fa-twitter alt"><span class="label">Twitter</span></a></li>
+								<li><a href="#" class="icon brands fa-facebook-f alt"><span class="label">Facebook</span></a></li>
+								<li><a href="#" class="icon brands fa-instagram alt"><span class="label">Instagram</span></a></li>
+								<li><a href="#" class="icon brands fa-github alt"><span class="label">GitHub</span></a></li>
+								<li><a href="#" class="icon brands fa-dribbble alt"><span class="label">Dribbble</span></a></li>
+							</ul>
+						</section>
+						<p class="copyright">&copy; Untitled. Design: <a href="https://html5up.net">HTML5 UP</a>.</p>
+					</footer>
+
+			</div>
+
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery.scrollex.min.js"></script>
+			<script src="assets/js/jquery.scrolly.min.js"></script>
+			<script src="assets/js/browser.min.js"></script>
+			<script src="assets/js/breakpoints.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
+
+	</body>
+</html>
