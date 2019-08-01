@@ -40,6 +40,14 @@ text.legendtitle {
     fill: none;
     stroke-width: 2;
 }
+.grid line {
+  stroke: lightgrey;
+  stroke-opacity: 0.7;
+  shape-rendering: crispEdges;
+}
+.grid path {
+  stroke-width: 0;
+}
 </style>
 <body onload='init()'>
 <table>
@@ -50,22 +58,40 @@ text.legendtitle {
     </td></tr>
 </table>
 <script>
-// gridlines in x axis function
-function make_x_gridlines() {		
-return d3.axisBottom(x)
-        .ticks(5)
+
+var detailData;
+var summaryData;
+
+function detailConvert(d){
+    return {
+        ArtistTrack: d.ArtistTrack,
+        Country: d.Country,
+        DateMonth: new Date(d.DateMonth),
+        Position: parseFloat(d.Position),
+        Streams: parseInt(d.Streams),
+        Group: d.Group
+    }
 }
 
-// gridlines in y axis function
-function make_y_gridlines() {		
-    return d3.axisLeft(y)
-        .ticks(5)
+function summaryConvert(d){
+    return {
+        ArtistTrack: d.ArtistTrack,
+        Country: d.Country,
+        DateOfTop10: new Date(d.DateOfTop10),
+        DaysInTop10: parseInt(d.DaysInTop10),
+        DaysToTop10: parseInt(d.DaysToTop10),
+        MaxPosition: parseFloat(d.MaxPosition),
+        ReleaseDate: new Date(d.ReleaseDate),
+        Streams: parseInt(d.Streams),
+        Group: d.Group
+    }
 }
 
 async function init() {
-    const groups = ["US of A","Global Average","Freshers","Laggards","Love you long time","Main Group"];
-    initSongStreamPlot(groups);
-    //initCountryLegend(groups, 15);
+    detailData = await d3.csv('https://alanflanders.github.io/SpotifyStreamAnalysis2019/Top100SongData.csv', detailConvert);
+    summaryData = await d3.csv('https://alanflanders.github.io/SpotifyStreamAnalysis2019/SongAggregateDataByCountry.csv', summaryConvert);
+
+    initSongStreamPlot();
 }
 
 // Define the div for the tooltip
@@ -73,37 +99,7 @@ var div = d3.select("body").append("div")
     .attr("class", "tooltip")				
     .style("opacity", 0);
 
-
-async function initSongStreamPlot(groups) {
-    const detailData = await d3.csv('https://alanflanders.github.io/SpotifyStreamAnalysis2019/Top100SongData.csv', detailConvert);
-    const summaryData = await d3.csv('https://alanflanders.github.io/SpotifyStreamAnalysis2019/SongAggregateDataByCountry.csv', summaryConvert);
-
-    function detailConvert(d){
-        return {
-            ArtistTrack: d.ArtistTrack,
-            Country: d.Country,
-            DateMonth: new Date(d.DateMonth),
-            Position: parseFloat(d.Position),
-            Streams: parseInt(d.Streams),
-            Group: d.Group
-        }
-    }
-
-    function summaryConvert(d){
-        return {
-            ArtistTrack: d.ArtistTrack,
-            Country: d.Country,
-            DateOfTop10: new Date(d.DateOfTop10),
-            DaysInTop10: parseInt(d.DaysInTop10),
-            DaysToTop10: parseInt(d.DaysToTop10),
-            MaxPosition: parseFloat(d.MaxPosition),
-            ReleaseDate: new Date(d.ReleaseDate),
-            Streams: parseInt(d.Streams),
-            Group: d.Group
-        }
-    }
-
-
+async function initSongStreamPlot() {
     var margin = {top: 20, right: 50, bottom: 50, left: 50};
     svg = d3.select("svg#SongStreamPlot");
     svgWidth = parseInt(svg.style("width"));
@@ -112,7 +108,7 @@ async function initSongStreamPlot(groups) {
     var width = svgWidth - margin.left - margin.right;
     var height = svgHeight - margin.top - margin.bottom;
 
-        // Scales
+    // Scales
     var x = d3.scaleTime()
     .domain([new Date(2017, 0, 1), new Date(2019, 5, 1)])
     .range([0,width]);
@@ -166,10 +162,6 @@ async function initSongStreamPlot(groups) {
     });
 
     /*
-    .attr("cx", function(d,i){return x(d.AvgDaysToTop10);})
-    .attr("cy", function(d,i){return y(d.AvgDaysInTop10);})
-    .attr("r", function(d,i){return r(d.TrackCount);})
-    .attr("fill", function(d,i){return groupColor(d.Group);})
     .on("mouseover", function(d) {		
         div.transition()		
             .duration(200)		
@@ -226,6 +218,34 @@ async function initSongStreamPlot(groups) {
         .style("text-anchor", "middle")
         .text("Date");    
 
+    // Gridlines
+    function make_x_gridlines() {		
+        return d3.axisBottom(x)
+                .ticks(5)
+    }
+
+    function make_y_gridlines() {		
+        return d3.axisLeft(y)
+            .ticks(5)
+    }
+
+    svg.append("g")			
+        .attr("class", "grid")
+        .attr("transform","translate("+margin.left+","+margin.top+")")
+        .call(make_y_gridlines()
+            .tickSize(-width)
+            .tickFormat("")
+        )
+    /*
+    svg.append("g")			
+        .attr("class", "grid")
+        .attr("transform","translate("+margin.left + "," + (height + margin.top) + ")")
+        .call(make_x_gridlines()
+            .tickSize(-height)
+            .tickFormat("")
+        )
+    */
+    
     // Init legend with data
     initCountryLegend(summaryFilterData.map(function(e){return e.Country;}), 15);
 }
@@ -286,7 +306,6 @@ async function initCountryLegend(groups, size){
                 
 }
 
-
 // Highlighting
 function unhighlightCountries() {
     d3.selectAll("[id^='stream']").classed("highlighted", false);
@@ -301,14 +320,13 @@ function highlightCountriesByGroup(groups) {
     // First unhighlight all the circles.
     unhighlightCountries();
     lowlightCountries();
-
     
     d3.selectAll("[id^='stream']").filter(function(d, i) {
         return groups.indexOf(d[0].Country) > -1;
     })
     .classed("lowlighted", false)
     .classed("highlighted", true);
-  }
+}
 
 function unhighlightGroups() {
     d3.selectAll("rect.group").classed("highlighted", false);
@@ -329,7 +347,7 @@ function highlightGroups(groups) {
     })
     .classed("lowlighted", false)
     .classed("highlighted",true);
-  }
+}
 
 
 </script>
