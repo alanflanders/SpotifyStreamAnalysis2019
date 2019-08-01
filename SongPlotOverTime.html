@@ -2,8 +2,8 @@
 <script src='https://d3js.org/d3.v5.min.js'></script>
 <style> 
 circle.country {stroke:black;fill-opacity: 0.9} 
-circle.highlighted {fill-opacity: 0.95}
-circle.lowlighted {fill-opacity: 0.3;stroke-opacity: 0.3}
+.highlighted {fill-opacity: 0.95;stroke-opacity: 0.95}
+.lowlighted {fill-opacity: 0.3;stroke-opacity: 0.3}
 rect.group {fill-opacity: 1}
 rect.lowlighted {fill-opacity: 0.3; stroke-opacity: 0.3}
 div.tooltip {	
@@ -36,25 +36,73 @@ text.legendtitle {
     font-size: 13px;
     font-weight: bold
 }
+.line {
+    fill: none;
+    stroke-width: 2;
+}
 </style>
 <body onload='init()'>
 <table>
     <tr><td>
-    <svg width=600 height=600 id="SongStreamPlot"></svg>
+    <svg width=600 height=400 id="SongStreamPlot"></svg>
     </td><td>
     <svg width=150 height=200 id="CountryLegend"></svg>
     </td></tr>
 </table>
 <script>
+// gridlines in x axis function
+function make_x_gridlines() {		
+return d3.axisBottom(x)
+        .ticks(5)
+}
+
+// gridlines in y axis function
+function make_y_gridlines() {		
+    return d3.axisLeft(y)
+        .ticks(5)
+}
 
 async function init() {
     const groups = ["US of A","Global Average","Freshers","Laggards","Love you long time","Main Group"];
     initSongStreamPlot(groups);
-    initCountryLegend(groups, 15);
+    //initCountryLegend(groups, 15);
 }
 
+// Define the div for the tooltip
+var div = d3.select("body").append("div")	
+    .attr("class", "tooltip")				
+    .style("opacity", 0);
+
+
 async function initSongStreamPlot(groups) {
-    const data = await d3.csv('https://alanflanders.github.io/SpotifyStreamAnalysis2019/Top100SongData.csv');
+    const detailData = await d3.csv('https://alanflanders.github.io/SpotifyStreamAnalysis2019/Top100SongData.csv', detailConvert);
+    const summaryData = await d3.csv('https://alanflanders.github.io/SpotifyStreamAnalysis2019/SongAggregateDataByCountry.csv', summaryConvert);
+
+    function detailConvert(d){
+        return {
+            ArtistTrack: d.ArtistTrack,
+            Country: d.Country,
+            DateMonth: new Date(d.DateMonth),
+            Position: parseFloat(d.Position),
+            Streams: parseInt(d.Streams),
+            Group: d.Group
+        }
+    }
+
+    function summaryConvert(d){
+        return {
+            ArtistTrack: d.ArtistTrack,
+            Country: d.Country,
+            DateOfTop10: new Date(d.DateOfTop10),
+            DaysInTop10: parseInt(d.DaysInTop10),
+            DaysToTop10: parseInt(d.DaysToTop10),
+            MaxPosition: parseFloat(d.MaxPosition),
+            ReleaseDate: new Date(d.ReleaseDate),
+            Streams: parseInt(d.Streams),
+            Group: d.Group
+        }
+    }
+
 
     var margin = {top: 20, right: 50, bottom: 50, left: 50};
     svg = d3.select("svg#SongStreamPlot");
@@ -64,28 +112,60 @@ async function initSongStreamPlot(groups) {
     var width = svgWidth - margin.left - margin.right;
     var height = svgHeight - margin.top - margin.bottom;
 
+        // Scales
     var x = d3.scaleTime()
-    .domain(new Date(2017, 1, 1), Date(2019,6,30))
+    .domain([new Date(2017, 0, 1), new Date(2019, 5, 1)])
     .range([0,width]);
 
     var y = d3.scaleLog()
-    .domain([10000,10000000])
+    .domain([10000,1000000000])
     .range([height,0]);
 
-    filterData = data.filter(function(d){return d.ArtistTrack == "Ed Sheeran - Shape of You"});
+    // Line generator
+    var line = d3.line()
+        .x(function(d, i) {return x(d.DateMonth); }) // set the x values for the line generator
+        .y(function(d) {return y(d.Streams); }) // set the y values for the line generator 
+        .curve(d3.curveMonotoneX) // apply smoothing to the line
 
-    debugger;
+    // Data
+    // Filter specific song and top 10 countries by streams
+    detailFilterData = detailData.filter(function(d){return d.ArtistTrack == "Ed Sheeran - Shape of You"});
+    summaryFilterData = summaryData.filter(function(d){return d.ArtistTrack == "Ed Sheeran - Shape of You"});
 
+    
+    // Get top 10; Slice off global which will be the highest
+    summaryFilterData = summaryFilterData.sort(function(a,b){return d3.descending(a.Streams, b.Streams)}).slice(0,10);
+
+    // Filter out the detail data for only the top 10 countries
+    detailFilterData = detailFilterData.filter(function(d){return summaryFilterData.map(function(e){return e.Country;}).indexOf(d.Country) > -1;});
+    //detailFilterData = detailFilterData.filter(function(d){return d.Country == "Global"});
+    detailFilterData = detailFilterData.sort(function(a,b){return d3.ascending(a.Country, b.Country) || d3.ascending(a.DateMonth, b.DateMonth)});
+
+    var detailFilterData = d3.nest()
+                                .key(function(d){return d.Country;})
+                                .entries(detailFilterData);
+
+    //debugger;
+
+    // Define colors for top ten countries
     var groupColor = d3.scaleOrdinal(d3.schemeCategory10)
-      .domain(groups);
+        .domain(summaryFilterData.map(function(e){return e.Country;}));
 
+    
+    // Draw the lines
     g = svg.append("g")
-    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-    g.selectAll("circle.country")  
-    .data(data)
-    .enter().append("circle")
-    .attr("class", "country")
+    detailFilterData.forEach(function(element){
+        g.append("path")
+            .attr("id", "stream-" + element.key)
+            .style("stroke", groupColor(element.key))
+            .data([element.values])
+            .attr("class", "line")
+            .attr("d", line);
+    });
+
+    /*
     .attr("cx", function(d,i){return x(d.AvgDaysToTop10);})
     .attr("cy", function(d,i){return y(d.AvgDaysInTop10);})
     .attr("r", function(d,i){return r(d.TrackCount);})
@@ -109,16 +189,16 @@ async function initSongStreamPlot(groups) {
             .duration(500)		
             .style("opacity", 0);	
         });
+*/
 
-    // Define the div for the tooltip
-    var div = d3.select("body").append("div")	
-    .attr("class", "tooltip")				
-    .style("opacity", 0);
 
     // Axis
     svg.append("g")
-    .attr("transform","translate("+margin.left+","+margin.top+")")
-    .call(d3.axisLeft(y).tickValues([20,30,40,50,60,70,80,90,100,110]).tickFormat(d3.format("~s")));
+        .attr("class", "y axis")
+        .attr("transform","translate("+margin.left+","+margin.top+")")
+        .call(d3.axisLeft(y)
+                .tickValues([10000,100000,1000000,10000000,100000000,1000000000])
+                .tickFormat(d3.format(".0s"))); // Create an axis component with d3.axisLeft
 
     // text label for the y axis
     svg.append("text")
@@ -128,27 +208,33 @@ async function initSongStreamPlot(groups) {
         .attr("x",0-((margin.top+height+margin.bottom)/2))
         //.attr("dy", "1em")
         .style("text-anchor", "middle")
-        .text("Avg. Days in Top Ten");      
+        .text("Streams");      
 
+    // 3. Call the x axis in a group tag
     svg.append("g")
-    .attr("transform","translate("+margin.left + "," + (height + margin.top) + ")")
-    .call(d3.axisBottom(x).tickValues([0,10,20,30,40]).tickFormat(d3.format("~s")));
+        .attr("class", "x axis")
+        .attr("transform","translate("+margin.left + "," + (height + margin.top) + ")")
+        .call(d3.axisBottom(x)); // Create an axis component with d3.axisBottom
 
-  // text label for the x axis
-  svg.append("text")    
-      .attr("class", "axistitle")         
-      .attr("transform",
-            "translate(" + ((margin.left+width+margin.right)/2) + " ," + 
-                           (height + (margin.top*2.6)) + ")")
-      .style("text-anchor", "middle")
-      .text("Avg. Days to Top Ten");    
+
+    // text label for the x axis
+    svg.append("text")    
+        .attr("class", "axistitle")         
+        .attr("transform",
+                "translate(" + ((margin.left+width+margin.right)/2) + " ," + 
+                            (height + (margin.top*2.6)) + ")")
+        .style("text-anchor", "middle")
+        .text("Date");    
+
+    // Init legend with data
+    initCountryLegend(summaryFilterData.map(function(e){return e.Country;}), 15);
 }
 
-async function initGroupLegend(groups, size){
+async function initCountryLegend(groups, size){
     const data = groups;
-
+    
     var margin = {top: 5, right: 5, bottom: 5, left: 5};
-    svg = d3.select("svg#GroupLegend");
+    svg = d3.select("svg#CountryLegend");
     svgWidth = parseInt(svg.style("width"));
     svgHeight = parseInt(svg.style("height"));
 
@@ -163,7 +249,7 @@ async function initGroupLegend(groups, size){
         .attr("x", margin.left)
         .attr("y", margin.top + size/2)
         .style("text-anchor", "left")
-        .text("Country groups");    
+        .text("Top Countries");    
     
     g = svg.append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
@@ -200,14 +286,15 @@ async function initGroupLegend(groups, size){
                 
 }
 
-function unhighlightCountries() {
-    d3.selectAll("circle.country").classed("highlighted", false);
-    d3.selectAll("circle.country").classed("lowlighted", false);
-}
 
 // Highlighting
+function unhighlightCountries() {
+    d3.selectAll("[id^='stream']").classed("highlighted", false);
+    d3.selectAll("[id^='stream']").classed("lowlighted", false);
+}
+
 function lowlightCountries() {
-    d3.selectAll("circle.country").classed("lowlighted", true);
+    d3.selectAll("[id^='stream']").classed("lowlighted", true);
 }
 
 function highlightCountriesByGroup(groups) {
@@ -215,10 +302,12 @@ function highlightCountriesByGroup(groups) {
     unhighlightCountries();
     lowlightCountries();
 
-    d3.selectAll("circle.country").filter(function(d, i) {
-        return groups.indexOf(d.Group) > -1;
+    
+    d3.selectAll("[id^='stream']").filter(function(d, i) {
+        return groups.indexOf(d[0].Country) > -1;
     })
-    .classed("lowlighted", false);
+    .classed("lowlighted", false)
+    .classed("highlighted", true);
   }
 
 function unhighlightGroups() {

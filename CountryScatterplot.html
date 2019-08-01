@@ -131,8 +131,8 @@ async function initCountryPlot(groups) {
         .text("Avg. Days in Top Ten");      
 
     svg.append("g")
-    .attr("transform","translate("+margin.left + "," + (height + margin.top) + ")")
-    .call(d3.axisBottom(x).tickValues([0,10,20,30,40]).tickFormat(d3.format("~s")));
+        .attr("transform","translate("+margin.left + "," + (height + margin.top) + ")")
+        .call(d3.axisBottom(x).tickValues([0,10,20,30,40]).tickFormat(d3.format("~s")));
 
   // text label for the x axis
   svg.append("text")    
@@ -200,12 +200,12 @@ async function initGroupLegend(groups, size){
                 
 }
 
+// Highlighting
 function unhighlightCountries() {
     d3.selectAll("circle.country").classed("highlighted", false);
     d3.selectAll("circle.country").classed("lowlighted", false);
 }
 
-// Highlighting
 function lowlightCountries() {
     d3.selectAll("circle.country").classed("lowlighted", true);
 }
@@ -219,7 +219,7 @@ function highlightCountriesByGroup(groups) {
         return groups.indexOf(d.Group) > -1;
     })
     .classed("lowlighted", false);
-  }
+}
 
 function unhighlightGroups() {
     d3.selectAll("rect.group").classed("highlighted", false);
