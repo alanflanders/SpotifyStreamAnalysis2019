@@ -436,6 +436,7 @@ async function initSongStreamPlot(song, country) {
     
     // Init legend with data
     initCountryLegend(summaryFilterData.map(function(e){return e.Country;}), 15);
+    
 }
 
 async function initCountryLegend(groups, size){
@@ -632,6 +633,7 @@ function tabulate(container, data, columns) {
             initSongStreamPlot(d.ArtistTrack, d.Country);
             highlightSong(d.ArtistTrack.replace("'",""));
             highlightCountriesByGroup([d.Country]);
+            highlightGroups([d.Country]);
         });
 
 	// create a cell in each row for each column
