@@ -23,5 +23,11 @@
             "request": "launch",
             "file": "${workspaceFolder}/SongPlotOverTime.html"
         },
+        {
+            "name": "IntegratedPlot.html",
+            "type": "chrome",
+            "request": "launch",
+            "file": "${workspaceFolder}/IntegratedPlot.html"
+        },
     ]
 }

@@ -36,8 +36,8 @@
 						<ul>
 							<li><a href="#intro" class="active">Introduction</a></li>
 							<li><a href="#first">Top 10 Analysis</a></li>
-							<li><a href="#second">Song Trends</a></li>
-							<li><a href="#third">Country Trends</a></li>
+							<li><a href="#second">Top Song Analysis</a></li>
+							<li><a href="#third">Dive In</a></li>
 						</ul>
 					</nav>
 
@@ -50,7 +50,16 @@
 									<header class="major">
 										<h2>Introduction</h2>
 									</header>
-									<p>Introduction text</p>
+									<p>The following is an analysis of the global Spotify streaming data from January 1, 2017 to June 30, 2019.
+										In order to see global trends the data has been filtered to the top 600 songs globally and then further
+										filtered to include songs which have a minimum stream contribution from the United States of 10% and a
+										maximum of 35%. This is to ensure that US songs do not dominate results, but also ensures it is
+										mainstream in the US.
+									</p>
+									<p>
+										The visualizations are interactive so feel free to move your mouse over top of the charts and click
+										on the legends. A desktop browser should be used for best results.
+									</p>
 									<ul class="actions">
 										<li><a href="#first" class="button">Next</a></li>
 									</ul>
@@ -90,8 +99,13 @@
 								<li><b>US of A</b> - The USA could also be clustered with the fresher group</li>
 							</ul>
 
-							<p>The size of the circle indicates the number of songs which made it to the country's top 10.
-								Hover over a circle to see detailed data or select a country group to highlight those countries.
+							<p class="content">The size of the circle indicates the number of songs which made it to the country's top 10.
+								Hover over a circle to see detailed data or select a country group to highlight those countries. It is interesting
+								that of the songs included in this filter (global songs attributed 10-35% to the US), only 96 made it to the global
+								top 10 position and only 66 made it to the USA top 10 position. Songs may have been listed to in large quantities
+								globaly, but may not have made the top ten for that country. Therefore to be successful a song does not nessasarily
+								need to reach the top 10 in any one country or even globally if at least a portion of every country is listening to
+								that song.
 							</p>
 
 								<iframe src="CountryScatterplot.html" height="750px" width="100%"></iframe>
@@ -108,10 +122,12 @@
 						<!-- Song Analysis -->
 							<section id="second" class="main special">
 								<header class="major">
-									<h2>Song Analysis</h2>
-									<p>Select songs from the top 100 by stream to see how popularity changes over time by both the number
+									<h2>Top Song Analysis</h2>
+									<p>Select songs from the global top 100 to see how popularity changes over time by both the number
 										of streams and song ranking. Notice that more streams may still come from countries where the song
-										did not make it into the top 10.
+										did not make it into the top 10. Some songs are played throughout the entire analysis period while others
+										make a quick impact and then exit stage left. Many songs start in the top 10 on first release
+										without any build up.
 									</p>
 									<iframe src="SongPlotOverTime.html" height="850px" width="100%"></iframe>
 								</header>
@@ -126,25 +142,15 @@
 						<!-- Free format -->
 							<section id="third" class="main special">
 								<header class="major">
-									<h2>Magna veroeros</h2>
+									<h2>Dive In</h2>
 								</header>
-								<ul class="features">
-									<li>
-										<span class="icon solid major style1 fa-code"></span>
-										<h3>Ipsum consequat</h3>
-										<p>Sed lorem amet ipsum dolor et amet nullam consequat a feugiat consequat tempus veroeros sed consequat.</p>
-									</li>
-									<li>
-										<span class="icon major style3 fa-copy"></span>
-										<h3>Amed sed feugiat</h3>
-										<p>Sed lorem amet ipsum dolor et amet nullam consequat a feugiat consequat tempus veroeros sed consequat.</p>
-									</li>
-									<li>
-										<span class="icon major style5 fa-gem"></span>
-										<h3>Dolor nullam</h3>
-										<p>Sed lorem amet ipsum dolor et amet nullam consequat a feugiat consequat tempus veroeros sed consequat.</p>
-									</li>
-								</ul>
+								<p class="content">Dive in and review the top songs for each country by clicking on the circles. For those top songs see how the streams and position for that
+									country hold up against the global and top countries for that song. In this top 10 analysis plot the circles are sized according
+									to the total number of streams for a country. The larger the number of streams, the greater influence that country has on 
+									the global top ten rankings.
+								</p>
+								
+								<iframe src="IntegratedPlot.html" height="1100px" width="100%"></iframe>
 							</section>
 
 					</div>
@@ -152,22 +158,23 @@
 				<!-- Footer -->
 					<footer id="footer">
 						<section>
-							<h2>Aliquam sed mauris</h2>
-							<p>Sed lorem ipsum dolor sit amet et nullam consequat feugiat consequat magna adipiscing tempus etiam dolore veroeros. eget dapibus mauris. Cras aliquet, nisl ut viverra sollicitudin, ligula erat egestas velit, vitae tincidunt odio.</p>
+							<h2>Credits</h2>
+							<p>This narative visualization was created as part of the CS 498 Data Visualization course as part of a Master's program
+								specializing in data science at the University of Illinois Urbana-Champaign. The source data was taken from
+								the Tableau "How to visualize your love of music" series available <a href="https://mkt.tableau.com/Public/Datasets/Spotify_Daily_Streaming.csv.zip">here</a>
+								and was extended and aggregated to render quickly in this visualization.
+							</p>
 							<ul class="actions">
-								<li><a href="generic.html" class="button">Learn More</a></li>
+								<li><a href="https://www.linkedin.com/in/alan-flanders" class="button">Learn More</a></li>
 							</ul>
 						</section>
 						<section>
-							<h2>Etiam feugiat</h2>
+							<h2>Alan Flanders</h2>
 							<dl class="alt">
 								<dt>Address</dt>
-								<dd>1234 Somewhere Road &bull; Nashville, TN 00000 &bull; USA</dd>
-								<dt>Phone</dt>
-								<dd>(000) 000-0000 x 0000</dd>
-								<dt>Email</dt>
-								<dd><a href="#">information@untitled.tld</a></dd>
+								<dd>Calgary, Alberta &bull; Canada</dd>
 							</dl>
+							<!--
 							<ul class="icons">
 								<li><a href="#" class="icon brands fa-twitter alt"><span class="label">Twitter</span></a></li>
 								<li><a href="#" class="icon brands fa-facebook-f alt"><span class="label">Facebook</span></a></li>
@@ -175,8 +182,9 @@
 								<li><a href="#" class="icon brands fa-github alt"><span class="label">GitHub</span></a></li>
 								<li><a href="#" class="icon brands fa-dribbble alt"><span class="label">Dribbble</span></a></li>
 							</ul>
+						-->
 						</section>
-						<p class="copyright">&copy; Untitled. Design: <a href="https://html5up.net">HTML5 UP</a>.</p>
+						<p class="copyright">&copy;2019 Alan Flanders. Design: <a href="https://html5up.net">HTML5 UP</a>.</p>
 					</footer>
 
 			</div>
