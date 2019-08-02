@@ -4,7 +4,15 @@
 circle.country {stroke:black;fill-opacity: 0.9} 
 circle.highlighted {fill-opacity: 0.95}
 circle.lowlighted {fill-opacity: 0.3;stroke-opacity: 0.3}
-rect.group {fill-opacity: 1}
+rect.group {
+    fill-opacity: 1;
+    pointer-events: all
+}
+rect.group:hover {
+    stroke-opacity: 1;
+    stroke-width: 1;
+    stroke: black
+}
 rect.lowlighted {fill-opacity: 0.3; stroke-opacity: 0.3}
 div.tooltip {	
     position: absolute;			
@@ -30,6 +38,9 @@ text.axistitle {
 text.legendtext {
     font-family: sans-serif;
     font-size: 13px
+}
+text.legendtext:hover {
+    font-weight: bold
 }
 text.legendtitle {
     font-family: sans-serif;
@@ -196,8 +207,18 @@ async function initGroupLegend(groups, size){
         .attr("x", function(d,i){return 2 * size;})
         .attr("y", function(d,i){return (size*1.8) + (size*i*1.1);})
         .attr("class", "legendtext")
-        .text(function(d,i){return d;});
-                
+        .text(function(d,i){return d;})
+        .on("click", function(d, i) {
+                if (d3.select(this).classed("highlighted"))
+                {
+                    unhighlightGroups();
+                    unhighlightCountries();
+                }
+                else {
+                    highlightCountriesByGroup([d]);
+                    highlightGroups([d]);
+                }
+            });
 }
 
 // Highlighting
