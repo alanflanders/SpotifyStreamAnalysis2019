@@ -463,15 +463,17 @@ async function initCountryLegend(groups, size){
     var groupColor = d3.scaleOrdinal(d3.schemeCategory10)
       .domain(data);
 
+    /*
     svg.append("text")    
         .attr("class", "legendtitle")         
         .attr("x", margin.left)
         .attr("y", margin.top + size/2)
         .style("text-anchor", "left")
         .text("Top Countries");    
-    
+    */
+
     g = svg.append("g")
-        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+        .attr("transform", "translate(" + margin.left + "," + (margin.top+size) + ")");
 
     g.selectAll("rect")  
         .data(data)
